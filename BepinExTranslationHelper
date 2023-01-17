@@ -1,0 +1,78 @@
+
+using UnityEngine.UI;
+using Unity.TextMeshPro;
+using UnityEngine.InputLegacyModule;
+...
+
+private void Update()
+{
+if (Input.GetKeyUp(KeyCode.F2) == true)
+            {
+
+
+                var alltext = UnityEngine.UI.Text.FindObjectsOfType<UnityEngine.UI.Text>();
+                var alltmp = TextMeshProUGUI.FindObjectsOfType<TextMeshProUGUI>();
+                foreach (var x in alltext)
+                {
+
+                    if (translationDict.ContainsValue(x.text) && !keystoupdate.ContainsValue(x.text))
+                    {
+                        keystoupdate.Add(translationDict.FirstOrDefault(zz => zz.Value == x.text).Key, x.text);
+                        Debug.Log("KeyToUpdate filled with " + translationDict.FirstOrDefault(z => z.Value == x.text).Key + "¤" + x.text);
+                    }
+
+
+                }
+
+                foreach (var y in alltmp)
+                {
+                    if (translationDict.ContainsValue(y.text) && !keystoupdate.ContainsValue(y.text))
+                    {
+                        keystoupdate.Add(translationDict.First(z => z.Value == y.text).Key, y.text);
+                        Debug.Log("KeyToUpdate filled with " + translationDict.FirstOrDefault(z => z.Value == y.text).Key + "¤" + y.text);
+                    }
+                }
+                translationDict.Clear();
+                Awake();
+                LocalizationManager.Instance.SetLanguageID(0);
+                foreach (var x in alltext)
+                {
+                    var chstring = keystoupdate.FirstOrDefault(zz => zz.Value == x.text).Key;
+                    if (x.text != "" && x.text != null)
+                    {
+                        if (keystoupdate.ContainsValue(x.text) && translationDict.ContainsKey(chstring))
+                        {
+                            Debug.Log("Old Value = " + x.text);
+                            Debug.Log("CH key = " + chstring);
+                            Debug.Log("Newvalue = " + translationDict[chstring]);
+
+                            if (x.text != translationDict[chstring])
+                            {
+                                x.text = translationDict[chstring];
+                                keystoupdate.Remove(chstring);
+                            }
+                        }
+                    }
+                }
+                foreach (var y in alltmp)
+                {
+                    if (y.text != "" && y.text != null)
+                    {
+                        var chstring2 = keystoupdate.FirstOrDefault(zz => zz.Value == y.text).Key;
+                        if (keystoupdate.ContainsValue(y.text) && translationDict.ContainsKey(chstring2))
+                        {
+
+                            Debug.Log("Old Value = " + y.text);
+                            Debug.Log("CH key = " + chstring2);
+                            Debug.Log("Newvalue = " + translationDict[chstring2]);
+
+                            if (y.text != translationDict[chstring2])
+                            {
+                                y.text = translationDict[chstring2];
+                                keystoupdate.Remove(chstring2);
+                            }
+                        }
+                    }
+                }
+            }
+}
