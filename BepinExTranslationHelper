@@ -8,13 +8,13 @@ private void Update()
 {
 if (Input.GetKeyUp(KeyCode.F2) == true)
             {
-
-
+                //We scan for UI.Text and TMPro objects
                 var alltext = UnityEngine.UI.Text.FindObjectsOfType<UnityEngine.UI.Text>();
                 var alltmp = TextMeshProUGUI.FindObjectsOfType<TextMeshProUGUI>();
                 foreach (var x in alltext)
                 {
-
+                    //Your translations must be in a dict. Its name can vary. Here it's translation dict. It must contain your source strings as keys and your translation as values. 
+                    //keystoupdate is another dict<string,string>, created before Update() runs. It's currently emputy.
                     if (translationDict.ContainsValue(x.text) && !keystoupdate.ContainsValue(x.text))
                     {
                         keystoupdate.Add(translationDict.FirstOrDefault(zz => zz.Value == x.text).Key, x.text);
@@ -33,8 +33,11 @@ if (Input.GetKeyUp(KeyCode.F2) == true)
                     }
                 }
                 translationDict.Clear();
+
+                //Awake(), in this instance, is just a method in which I populate the dict from a file (and this code wasn't made by me, that's why I'm not sharing it). It reads the content of a csv file and turns it into a dict. There are plenty of examples to help you do so.
+                //So, in short, after clearing the dict with translationdict.Clear(), we're not re-generating it. Since the dict has been edited prior to the user pressing F2, the new dict will differ from the old dict. The difference will be the changes we've made.
                 Awake();
-                LocalizationManager.Instance.SetLanguageID(0);
+
                 foreach (var x in alltext)
                 {
                     var chstring = keystoupdate.FirstOrDefault(zz => zz.Value == x.text).Key;
@@ -42,9 +45,9 @@ if (Input.GetKeyUp(KeyCode.F2) == true)
                     {
                         if (keystoupdate.ContainsValue(x.text) && translationDict.ContainsKey(chstring))
                         {
-                            Debug.Log("Old Value = " + x.text);
-                            Debug.Log("CH key = " + chstring);
-                            Debug.Log("Newvalue = " + translationDict[chstring]);
+                            Debug.Log("Old Translation = " + x.text);
+                            Debug.Log("Original Language String = " + chstring);
+                            Debug.Log("New Translation = " + translationDict[chstring]);
 
                             if (x.text != translationDict[chstring])
                             {
@@ -62,9 +65,9 @@ if (Input.GetKeyUp(KeyCode.F2) == true)
                         if (keystoupdate.ContainsValue(y.text) && translationDict.ContainsKey(chstring2))
                         {
 
-                            Debug.Log("Old Value = " + y.text);
-                            Debug.Log("CH key = " + chstring2);
-                            Debug.Log("Newvalue = " + translationDict[chstring2]);
+                            Debug.Log("Old Translation = " + y.text);
+                            Debug.Log("Original Language String = " + chstring2);
+                            Debug.Log("New Translation = " + translationDict[chstring2]);
 
                             if (y.text != translationDict[chstring2])
                             {
