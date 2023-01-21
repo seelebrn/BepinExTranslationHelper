@@ -17,6 +17,7 @@ if (Input.GetKeyUp(KeyCode.F2) == true)
                     //keystoupdate is another dict<string,string>, created before Update() runs. It's currently emputy.
                     if (translationDict.ContainsValue(x.text) && !keystoupdate.ContainsValue(x.text))
                     {
+                        //My dict has ¤ as a separator betwewen keys and values. Adapt as needed.
                         keystoupdate.Add(translationDict.FirstOrDefault(zz => zz.Value == x.text).Key, x.text);
                         Debug.Log("KeyToUpdate filled with " + translationDict.FirstOrDefault(z => z.Value == x.text).Key + "¤" + x.text);
                     }
@@ -38,11 +39,14 @@ if (Input.GetKeyUp(KeyCode.F2) == true)
                 //So, in short, after clearing the dict with translationdict.Clear(), we're not re-generating it. Since the dict has been edited prior to the user pressing F2, the new dict will differ from the old dict. The difference will be the changes we've made.
                 Awake();
 
+                //So, for each text item displayed on screen... (first UnityEngine.UI.Text, then TMP)
                 foreach (var x in alltext)
                 {
+                    We're searching for the original key (here, untranslated Chinese string), which value (modified/translated string) was already displayed in-game before the dict change. 
                     var chstring = keystoupdate.FirstOrDefault(zz => zz.Value == x.text).Key;
                     if (x.text != "" && x.text != null)
                     {
+                        //If keystoupdate we populated earlier indeed contains the old value, and **if the original key indeed has a corresponding value in the new dict**
                         if (keystoupdate.ContainsValue(x.text) && translationDict.ContainsKey(chstring))
                         {
                             Debug.Log("Old Translation = " + x.text);
@@ -51,6 +55,7 @@ if (Input.GetKeyUp(KeyCode.F2) == true)
 
                             if (x.text != translationDict[chstring])
                             {
+                                //Now it's easy, we just take the new/edited value of the original key ! Done!
                                 x.text = translationDict[chstring];
                                 keystoupdate.Remove(chstring);
                             }
